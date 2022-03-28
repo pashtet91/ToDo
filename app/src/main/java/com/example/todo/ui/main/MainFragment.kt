@@ -9,11 +9,20 @@ import android.view.ViewGroup
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todo.databinding.MainFragmentBinding
+import com.example.todo.models.TaskList
 
-class MainFragment : Fragment() {
+class MainFragment(val clickListener: MainFragmentInteractionListener)
+    : Fragment(),
+      ListSelectionRecyclerViewAdapter.
+        ListSelectionRecyclerViewClickListener {
+
+    interface MainFragmentInteractionListener{
+        fun listItemTapped(list: TaskList)
+    }
 
     companion object {
-        fun newInstance() = MainFragment()
+        fun newInstance(clickListener:MainFragmentInteractionListener)
+            = MainFragment(clickListener)
     }
 
     private lateinit var viewModel: MainViewModel
@@ -43,11 +52,15 @@ class MainFragment : Fragment() {
             .get(MainViewModel::class.java)
 
         val recyclerViewAdapter =
-            ListSelectionRecyclerViewAdapter(viewModel.lists)
+            ListSelectionRecyclerViewAdapter(viewModel.lists, this)
         binding.listsRecyclerview.adapter = recyclerViewAdapter
         viewModel.onListAdded = {
             recyclerViewAdapter.listsUpdated()
         }
+    }
+
+    override fun listItemClicked(list: TaskList) {
+        clickListener.listItemTapped(list)
     }
 
 }
