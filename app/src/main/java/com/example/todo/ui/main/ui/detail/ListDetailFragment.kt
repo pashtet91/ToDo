@@ -6,9 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.todo.MainActivity
 import com.example.todo.R
 import com.example.todo.databinding.ListDetailFragmentBinding
+import com.example.todo.models.TaskList
+import com.example.todo.ui.main.MainViewModel
+import com.example.todo.ui.main.MainViewModelFactory
 
 
 class ListDetailFragment : Fragment() {
@@ -18,7 +23,7 @@ class ListDetailFragment : Fragment() {
     }
 
     lateinit var binding:ListDetailFragmentBinding
-    private lateinit var viewModel: ListDetailViewModel
+    private lateinit var viewModel: MainViewModel//ListDetailViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,8 +42,18 @@ class ListDetailFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         //viewModel = ViewModelProvider(this).get(ListDetailViewModel::class.java)
-        viewModel = ViewModelProvider(requireActivity())
-            .get(ListDetailViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity(),
+            MainViewModelFactory(PreferenceManager
+                    .getDefaultSharedPreferences(requireActivity())))
+                    .get(MainViewModel::class.java)
+
+        val list: TaskList? =
+            arguments?.getParcelable(MainActivity.INTENT_LIST_KEY)
+        if(list != null){
+            viewModel.list = list
+            requireActivity().title = list.name
+        }
+
 
         val recyclerAdapter =
             ListItemRecyclerViewAdapter(viewModel.list)

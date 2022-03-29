@@ -8,6 +8,7 @@ import android.text.InputType
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
 import com.example.todo.MainActivity
 import com.example.todo.R
 import com.example.todo.databinding.ListDetailActivityBinding
@@ -19,7 +20,7 @@ class ListDetailActivity : AppCompatActivity() {
 
 //    lateinit var list: TaskList
     lateinit var binding: ListDetailActivityBinding
-    lateinit var viewModel: ListDetailViewModel
+    lateinit var viewModel: MainViewModel//ListDetailViewModel
     lateinit var fragment: ListDetailFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,8 +34,10 @@ class ListDetailActivity : AppCompatActivity() {
             showCreateTaskDialog()
         }
 
-        viewModel = ViewModelProvider(this).get(
-            ListDetailViewModel::class.java)
+        viewModel = ViewModelProvider(this,
+        MainViewModelFactory(PreferenceManager.
+            getDefaultSharedPreferences(this))).get(
+            MainViewModel::class.java)
         viewModel.list = intent.
                 getParcelableExtra(MainActivity.INTENT_LIST_KEY)!!
 

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todo.databinding.MainFragmentBinding
 import com.example.todo.models.TaskList
 
-class MainFragment(val clickListener: MainFragmentInteractionListener)
+class MainFragment()
     : Fragment(),
       ListSelectionRecyclerViewAdapter.
         ListSelectionRecyclerViewClickListener {
@@ -21,12 +21,13 @@ class MainFragment(val clickListener: MainFragmentInteractionListener)
     }
 
     companion object {
-        fun newInstance(clickListener:MainFragmentInteractionListener)
-            = MainFragment(clickListener)
+        fun newInstance()
+            = MainFragment()
     }
 
     private lateinit var viewModel: MainViewModel
     private lateinit var binding:MainFragmentBinding
+    lateinit var clickListener:MainFragmentInteractionListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
